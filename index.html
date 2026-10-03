@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>VEREDICTO — Your coding agent says "done." We check.</title>
+<meta name="description" content="VEREDICTO verifies what your coding agent claims. Independent fail-closed verification in a separate process: VERIFIED or NOT_VERIFIED. Founding cohort waitlist open.">
+<style>
+  :root{--bg:#0b0e14;--panel:#121722;--line:#232c3d;--txt:#e8edf5;--dim:#9aa6bd;
+        --green:#3fb950;--red:#f85149;--accent:#6aa8ff;--amber:#d29922;--gold:#e3b341}
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{background:var(--bg);color:var(--txt);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Inter,Helvetica,Arial,sans-serif;line-height:1.65}
+  .wrap{max-width:780px;margin:0 auto;padding:48px 22px 90px}
+  header.hero{text-align:center;padding:44px 0 36px}
+  .badge{display:inline-block;border:1px solid var(--gold);color:var(--gold);border-radius:999px;padding:5px 16px;font-size:13px;letter-spacing:.08em;margin-bottom:20px;font-weight:600}
+  h1{font-size:clamp(32px,5.4vw,48px);line-height:1.18;margin-bottom:16px;letter-spacing:-.01em}
+  h1 .strike{color:var(--red);text-decoration:line-through;text-decoration-thickness:3px}
+  h1 .check{color:var(--green)}
+  .sub{color:var(--dim);font-size:18px;max-width:620px;margin:0 auto 30px}
+  .form-card{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:26px;max-width:520px;margin:0 auto;text-align:left}
+  .form-card label{display:block;font-size:13px;color:var(--dim);margin:10px 0 6px}
+  .form-card input[type=email],.form-card input[type=text]{width:100%;background:var(--bg);border:1px solid var(--line);border-radius:8px;color:var(--txt);font-size:16px;padding:12px 14px}
+  .form-card input:focus{outline:none;border-color:var(--accent)}
+  .cta{display:block;width:100%;background:var(--green);color:#04120a;font-weight:700;font-size:17px;padding:14px;border-radius:10px;border:none;cursor:pointer;margin-top:18px}
+  .cta:hover{filter:brightness(1.08)}
+  .cta:disabled{opacity:.6;cursor:wait}
+  .cta-note{color:var(--dim);font-size:13px;margin-top:10px;text-align:center}
+  .fmsg{font-size:14px;margin-top:12px;text-align:center;display:none}
+  .fmsg.ok{display:block;color:var(--green)}
+  .fmsg.err{display:block;color:var(--red)}
+  section{margin:60px 0}
+  h2{font-size:25px;margin-bottom:18px;padding-bottom:10px;border-bottom:1px solid var(--line)}
+  p{margin:14px 0}
+  .dim{color:var(--dim)}
+  .steps{list-style:none;margin-top:18px}
+  .steps li{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:16px 20px;margin:12px 0}
+  .steps b{color:var(--accent)}
+  .steps .n{display:inline-block;background:var(--accent);color:#06121f;font-weight:800;border-radius:50%;width:26px;height:26px;text-align:center;line-height:26px;margin-right:10px;font-size:14px}
+  .reports{display:grid;grid-template-columns:1fr;gap:16px;margin-top:20px}
+  .report{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:20px 22px;font-size:14.5px}
+  .report.fail{border-top:3px solid var(--red)}
+  .report.pass{border-top:3px solid var(--green)}
+  .report.live{border-top:3px solid var(--accent)}
+  .report h3{font-size:15px;margin-bottom:8px}
+  .report .tag{font-size:11px;letter-spacing:.08em;color:var(--dim);text-transform:uppercase}
+  .report .line{font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;font-size:13.5px;margin:6px 0;color:var(--dim)}
+  .report .line b{color:var(--txt)}
+  .verdict{display:inline-block;font-family:ui-monospace,Menlo,Consolas,monospace;font-weight:700;font-size:14px;padding:7px 14px;border-radius:8px;margin-top:10px}
+  .fail .verdict{background:#3d1113;color:var(--red)}
+  .pass .verdict{background:#0f2f1a;color:var(--green)}
+  .live .verdict{background:#0f1f3d;color:var(--accent)}
+  .evidence{display:flex;gap:14px;flex-wrap:wrap;margin-top:20px}
+  .ev{flex:1 1 150px;background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:16px;text-align:center}
+  .ev b{font-size:24px;display:block;color:var(--accent)}
+  .ev span{font-size:12.5px;color:var(--dim)}
+  .price-card{background:var(--panel);border:2px solid var(--gold);border-radius:14px;padding:30px;text-align:center;margin-top:22px}
+  .price{font-size:54px;font-weight:800}
+  .price small{font-size:16px;color:var(--dim);font-weight:400}
+  .price-alt{margin-top:12px;color:var(--dim)}
+  .price-alt b{color:var(--txt)}
+  .notlist{margin-top:18px}
+  .notlist li{margin:10px 0;color:var(--dim);list-style:none;padding-left:4px}
+  .notlist li::before{content:"✕ ";color:var(--red);font-weight:700}
+  .faq details{background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:14px 18px;margin:10px 0}
+  .faq summary{cursor:pointer;font-weight:600}
+  .faq p{color:var(--dim);font-size:15px}
+  footer{margin-top:70px;padding-top:26px;border-top:1px solid var(--line);color:var(--dim);font-size:13px;text-align:center}
+  footer a{color:var(--accent)}
+  .warn{border:1px solid var(--amber);border-radius:10px;padding:14px 18px;margin-top:22px;color:var(--amber);font-size:14px;background:#1a1408}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<header class="hero">
+  <div class="badge">FOUNDING COHORT · WAITLIST OPEN</div>
+  <h1>Your coding agent says <span class="strike">"done"</span>.<br>We <span class="check">check</span>.</h1>
+  <p class="sub">VEREDICTO is the bridge between you and your coding agent (Cursor, VS Code, Gemini). You delegate the task, the agent executes it — and an <b>independent verifier, in a separate process that never talks to the agent</b>, confirms the work is real. If the agent lies, you hear about it.</p>
+  <div class="form-card">
+    <form id="waitlist">
+      <label for="email">Work email</label>
+      <input type="email" id="email" name="email" placeholder="you@youragency.com" required>
+      <label for="nombre">Name (optional)</label>
+      <input type="text" id="nombre" name="nombre" placeholder="Jane">
+      <label for="uso">What do you build with AI agents? (optional)</label>
+      <input type="text" id="uso" name="uso" placeholder="e.g. client automations, chatbots…">
+      <button class="cta" type="submit" id="btn">Join the founding waitlist</button>
+      <div class="fmsg" id="msg"></div>
+    </form>
+    <div class="cta-note">Founder price <b>$15/mo or $120/yr, locked for life</b> · Payments open next week — waitlist members get first access.</div>
+  </div>
+</header>
+
+<section>
+  <h2>The problem</h2>
+  <p>Coding agents are fast and confident. Too confident: they tell you <i>"tests pass"</i> with a broken test, <i>"bug fixed"</i> with the bug intact. If you sell agent-built work to clients, every unverified "done" is a liability sitting in your invoice.</p>
+  <p>Our gap research (September 2026) found that <b>no tool on the market independently verifies what the agent claims</b> — every tool delegates and trusts. VEREDICTO closes that link: it doesn't compete with your agent, it audits it.</p>
+</section>
+
+<section>
+  <h2>How it works</h2>
+  <ol class="steps">
+    <li><span class="n">1</span><b>Delegate.</b> You describe the task in plain language. The bridge hands it to your coding agent (Cursor, VS Code, Gemini — anything speaking ACP, the open agent protocol).</li>
+    <li><span class="n">2</span><b>Execute.</b> The agent works in your repo and reports back its claim: <span class="dim">"done, tests pass."</span></li>
+    <li><span class="n">3</span><b>Verify — separately.</b> An independent verifier runs in its own process with a clean memory. It can't hear the agent's excuses. It re-runs the tests, inspects the diff, checks the expected files. Then it publishes the verdict: <b style="color:var(--green)">VERIFIED</b> or <b style="color:var(--red)">NOT_VERIFIED</b> — fail-closed, so when in doubt, it's a no.</li>
+  </ol>
+  <p class="dim">The verifier is read-only: it never modifies your repo. You bring your own model key — we never see it, store it, or resell it.</p>
+</section>
+
+<section>
+  <h2>Proof, not promises</h2>
+  <p>Three real reports from the actual prototype. No mockups, no renders — these are the bridge's own outputs.</p>
+  <div class="reports">
+    <div class="report fail">
+      <div class="tag">Real demo output · Case A</div>
+      <h3>The agent claims "done, tests pass" — with a broken test</h3>
+      <div class="line">agent claim&nbsp;&nbsp;: <b>"done, tests pass"</b></div>
+      <div class="line">[❌] tests-pass: <b>1 failed</b> — test_calc.py::test_add FAILED (add(2,3) returned 6, expected 5)</div>
+      <div class="line">[✅] git-diff-nonempty: diff present</div>
+      <div class="verdict">❌ NOT_VERIFIED</div>
+      <p class="dim" style="margin-top:10px">The agent "fixed" the function by changing subtraction to multiplication. Still wrong. The bridge caught it.</p>
+    </div>
+    <div class="report pass">
+      <div class="tag">Real demo output · Case B</div>
+      <h3>Same task, real fix</h3>
+      <div class="line">agent claim&nbsp;&nbsp;: <b>"done, tests pass"</b></div>
+      <div class="line">[✅] tests-pass: <b>1 passed</b></div>
+      <div class="line">[✅] git-diff-nonempty: diff present</div>
+      <div class="verdict">✅ VERIFIED</div>
+      <p class="dim" style="margin-top:10px">Same claim, same pipeline. This time the work was real — and the bridge said so.</p>
+    </div>
+    <div class="report live">
+      <div class="tag">Real smoke test · 2026-10-01 · live cursor-agent</div>
+      <h3>A real agent, on a real machine, through the bridge</h3>
+      <div class="line">driver&nbsp;&nbsp;: <b>CursorACPAgentDriver</b> (real cursor-agent, real login)</div>
+      <div class="line">[✅] ACP handshake: initialize → session/new → session/prompt</div>
+      <div class="line">[✅] agent created the requested file · [✅] claim returned</div>
+      <div class="line">[✅] 7/7 ACP driver tests green on the machine</div>
+      <div class="verdict">✅ VERIFIED · suite 28/28 green after fix</div>
+      <p class="dim" style="margin-top:10px">The smoke test even caught a real bug (the driver assumed a field cursor-agent omits). Fixed, re-verified, green.</p>
+    </div>
+  </div>
+  <div class="evidence">
+    <div class="ev"><b>28/28</b><span>tests green (prototype suite)</span></div>
+    <div class="ev"><b>2/2</b><span>demo cases: lie caught, truth confirmed</span></div>
+    <div class="ev"><b>live</b><span>mailbox deployed &amp; verified in production</span></div>
+    <div class="ev"><b>$0</b><span>infra cost — serverless, BYO-key</span></div>
+  </div>
+</section>
+
+<section>
+  <h2>Founding offer</h2>
+  <div class="price-card">
+    <div class="price">$15<small>/mo</small></div>
+    <div class="price-alt">or <b>$120/year</b> — locked for life, never goes up for you.<br>Public launch price: <b>$25/mo</b>.</div>
+    <p class="dim" style="margin-top:14px">Payments open next week. Join the waitlist today and you get first access at the founder price.</p>
+  </div>
+  <div class="warn"><b>Honest status:</b> today VEREDICTO is a validated prototype, not a polished installer. The packaged beta ships once real demand is confirmed — that's exactly what this waitlist measures. If we don't ship, you paid nothing.</div>
+</section>
+
+<section>
+  <h2>What it's NOT</h2>
+  <ul class="notlist">
+    <li><b>Not another coding agent.</b> It doesn't compete with Cursor or Copilot — it sits on top and audits them.</li>
+    <li><b>Not magic.</b> Deterministic checks: tests, diffs, expected files. What it can't verify, it doesn't promise.</li>
+    <li><b>Not a finished product.</b> If you need a polished .exe today, this isn't for you — yet.</li>
+    <li><b>It never touches your keys.</b> BYO-key is mandatory. If anyone asks for your API key to "manage" it, that's not us.</li>
+  </ul>
+</section>
+
+<section class="faq">
+  <h2>FAQ</h2>
+  <details><summary>Which agents does it work with?</summary><p>Anything speaking ACP (Agent Client Protocol, open): Cursor, VS Code, Gemini and more. The driver auto-detects your agent from PATH. Switching agents is a ~10-line subclass.</p></details>
+  <details><summary>How is this different from LangSmith / Langfuse / Braintrust?</summary><p>Those observe and evaluate from <i>inside</i> the agent's own system. VEREDICTO verifies from a <i>separate process</i> that never talks to the agent — fail-closed. It's the difference between asking the student to grade their own exam and hiring an independent examiner.</p></details>
+  <details><summary>Do you see my code or my API keys?</summary><p>No. Verification runs on your machine; your model key stays with you (BYO-key). The mailbox only carries verdict events, never keys or source.</p></details>
+  <details><summary>When do I pay?</summary><p>Payments open next week. The waitlist costs nothing and reserves your founder price ($15/mo locked for life).</p></details>
+  <details><summary>What if the beta never ships?</summary><p>You paid nothing — the waitlist is free. We only build the packaged beta if real demand shows up. That's the deal.</p></details>
+</section>
+
+<footer>
+  Built by Raul — an engineer who got tired of re-checking his agents by hand.<br>
+  Questions? <a href="mailto:r6957928@gmail.com">r6957928@gmail.com</a> · © 2026
+</footer>
+
+</div>
+<script>
+const WEB3FORMS_KEY = "fc00c549-a968-4ada-b618-0616015b26d1";
+document.getElementById('waitlist').addEventListener('submit', async (e) => {
+  e.preventDefault();
+  const btn = document.getElementById('btn'), msg = document.getElementById('msg');
+  const data = new FormData(e.target);
+  const email = (data.get('email')||'').toString().trim();
+  if (!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(email)) {
+    msg.className = 'fmsg err'; msg.textContent = 'Please enter a valid email.'; return;
+  }
+  btn.disabled = true; btn.textContent = 'Joining…';
+  const payload = {
+    access_key: WEB3FORMS_KEY,
+    subject: 'VEREDICTO — new founding waitlist signup',
+    botcheck: '',
+    email: email,
+    nombre: (data.get('nombre')||'').toString().trim(),
+    uso: (data.get('uso')||'').toString().trim(),
+    origen: 'veredicto-landing',
+    utm_source: '', utm_medium: '', utm_campaign: ''
+  };
+  try {
+    const q = new URLSearchParams(location.search);
+    for (const k of ['utm_source','utm_medium','utm_campaign']) {
+      const v = (q.get(k)||'').trim().slice(0,60); if (v) payload[k] = v;
+    }
+  } catch(_){}
+  try {
+    const r = await fetch('https://api.web3forms.com/submit', {
+      method:'POST', headers:{'Content-Type':'application/json','Accept':'application/json'},
+      body: JSON.stringify(payload)
+    });
+    const j = await r.json();
+    if (j.success) {
+      msg.className = 'fmsg ok';
+      msg.textContent = "You're on the list. We'll email you the moment payments open — founder price locked.";
+      e.target.reset();
+    } else { throw new Error(j.message || 'error'); }
+  } catch(err) {
+    msg.className = 'fmsg err';
+    msg.textContent = 'Could not send. Please try again in a few seconds.';
+  } finally {
+    btn.disabled = false; btn.textContent = 'Join the founding waitlist';
+  }
+});
+</script>
+</body>
+</html>
