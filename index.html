@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>VEREDICTO — Your coding agent says "done." We check.</title>
-<meta name="description" content="VEREDICTO verifies what your coding agent claims. Independent fail-closed verification in a separate process: VERIFIED or NOT_VERIFIED. Founding cohort waitlist open.">
+<meta name="description" content="VEREDICTO verifies what your coding agent claims. Independent fail-closed verification in a separate process: VERIFIED or NOT_VERIFIED. Founding cohort open — founder price $15/mo or $120/yr, payments open now.">
 <style>
   :root{--bg:#0b0e14;--panel:#121722;--line:#232c3d;--txt:#e8edf5;--dim:#9aa6bd;
         --green:#3fb950;--red:#f85149;--accent:#6aa8ff;--amber:#d29922;--gold:#e3b341}
@@ -87,14 +87,14 @@
       <button class="cta" type="submit" id="btn">Join the founding waitlist</button>
       <div class="fmsg" id="msg"></div>
     </form>
-    <div class="cta-note">Founder price <b>$15/mo or $120/yr, locked for life</b> · Payments open next week — waitlist members get first access.</div>
+    <div class="cta-note">Founder price <b>$15/mo or $120/yr, locked for life</b> · <b>Payments are OPEN:</b> <a href="https://757793358408.gumroad.com/l/veredicto-founder" target="_blank" rel="noopener">pay the founder price on Gumroad</a> — or join the waitlist and decide later.</div>
   </div>
 </header>
 
 <section>
   <h2>The problem</h2>
   <p>Coding agents are fast and confident. Too confident: they tell you <i>"tests pass"</i> with a broken test, <i>"bug fixed"</i> with the bug intact. If you sell agent-built work to clients, every unverified "done" is a liability sitting in your invoice.</p>
-  <p>Our gap research (September 2026) found that <b>no tool on the market independently verifies what the agent claims</b> — every tool delegates and trusts. VEREDICTO closes that link: it doesn't compete with your agent, it audits it.</p>
+  <p>Our gap research (September 2026) found that most tools delegate and <b>trust the agent's own word</b>. VEREDICTO closes that link with a different design: <b>deterministic, fail-closed checks in a separate process — on your machine, with your own key</b>. When it cannot verify, it says NOT_VERIFIED instead of guessing. It doesn't compete with your agent; it audits it.</p>
 </section>
 
 <section>
@@ -153,9 +153,10 @@
   <div class="price-card">
     <div class="price">$15<small>/mo</small></div>
     <div class="price-alt">or <b>$120/year</b> — locked for life, never goes up for you.<br>Public launch price: <b>$25/mo</b>.</div>
-    <p class="dim" style="margin-top:14px">Payments open next week. Join the waitlist today and you get first access at the founder price.</p>
+    <p style="margin-top:14px"><a class="cta" href="https://757793358408.gumroad.com/l/veredicto-founder" target="_blank" rel="noopener" style="display:inline-block;text-decoration:none">Pay founder price — $15/mo or $120/yr</a></p>
+    <p class="dim" style="margin-top:10px">Secure checkout on Gumroad (they handle taxes and receipts). Prefer to think it over? The waitlist above stays free.</p>
   </div>
-  <div class="warn"><b>Honest status:</b> today VEREDICTO is a validated prototype, not a polished installer. The packaged beta ships once real demand is confirmed — that's exactly what this waitlist measures. If we don't ship, you paid nothing.</div>
+  <div class="warn"><b>Honest status:</b> today VEREDICTO is a validated prototype, not a polished installer. The packaged beta ships once real demand is confirmed — that's exactly what the founding cohort measures. If we don't ship, every founder payment is refunded in full.</div>
 </section>
 
 <section>
@@ -173,8 +174,8 @@
   <details><summary>Which agents does it work with?</summary><p>Anything speaking ACP (Agent Client Protocol, open): Cursor, VS Code, Gemini and more. The driver auto-detects your agent from PATH. Switching agents is a ~10-line subclass.</p></details>
   <details><summary>How is this different from LangSmith / Langfuse / Braintrust?</summary><p>Those observe and evaluate from <i>inside</i> the agent's own system. VEREDICTO verifies from a <i>separate process</i> that never talks to the agent — fail-closed. It's the difference between asking the student to grade their own exam and hiring an independent examiner.</p></details>
   <details><summary>Do you see my code or my API keys?</summary><p>No. Verification runs on your machine; your model key stays with you (BYO-key). The mailbox only carries verdict events, never keys or source.</p></details>
-  <details><summary>When do I pay?</summary><p>Payments open next week. The waitlist costs nothing and reserves your founder price ($15/mo locked for life).</p></details>
-  <details><summary>What if the beta never ships?</summary><p>You paid nothing — the waitlist is free. We only build the packaged beta if real demand shows up. That's the deal.</p></details>
+  <details><summary>When do I pay?</summary><p>Payments are open now: <a href="https://757793358408.gumroad.com/l/veredicto-founder" target="_blank" rel="noopener">founder checkout on Gumroad</a> — $15/mo or $120/yr, locked for life. The waitlist costs nothing and is optional.</p></details>
+  <details><summary>What if the beta never ships?</summary><p>Then every founder payment is refunded in full. We only build the packaged beta if real demand shows up. That's the deal.</p></details>
 </section>
 
 <footer>
@@ -229,6 +230,5 @@ document.getElementById('waitlist').addEventListener('submit', async (e) => {
   }
 });
 </script>
-<script>(function(){try{fetch("https://contador-paginas.mramirezraul71.workers.dev/hit",{method:"POST",mode:"no-cors",keepalive:true,headers:{"Content-Type":"application/json"},body:JSON.stringify({p:"veredicto-landing"})})}catch(e){}})();</script>
 </body>
 </html>
